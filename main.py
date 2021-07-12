@@ -2,7 +2,6 @@ import pygame
 import sys
 from player import Player
 
-
 width, height = 900, 500
 pygame.display.set_caption("Dumb")
 win = pygame.display.set_mode((width, height))
