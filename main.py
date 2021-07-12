@@ -1,5 +1,5 @@
 import pygame
-import sys
+import sys, os
 from player import Player
 
 width, height = 900, 500
@@ -9,17 +9,18 @@ win = pygame.display.set_mode((width, height))
 
 def draw_window(screen, players):
     screen.fill((255, 255, 255))
-    for player in players:
-        player.draw(screen)
+    for player in reversed(players):
+        # player.draw(screen)
+        screen.blit(player.image, (player.x, player.y))
     pygame.display.update()
 
 
 def main():
     run = True
     clock = pygame.time.Clock()
-    player1 = Player(50, 50, 100, 100, (255, 0, 0))
-    player2 = Player(100, 100, 100, 100, (255, 0, 0))
-    players = [player1, player2]
+    players = [Player(50, 50, 100, 145, (255, 0, 0)) for i in range(1)]
+    players[0].image = pygame.image.load(os.path.join("2_of_clubs.png"))
+    players[0].image.convert()
     while run:
         clock.tick(60)
         for event in pygame.event.get():

@@ -11,6 +11,7 @@ class Player:
         self.rect = (x, y, width, height)
         self.vel = .1
         self.click = False
+        self.image = ""
 
     def draw(self, win):
         pygame.draw.rect(win, self.color, self.rect)
@@ -19,8 +20,10 @@ class Player:
         if left:
             if self.x + self.width > mouse_x > self.x and self.y + self.height > mouse_y > self.y:
                 self.click = True
+                self.color = (0, 255, 0)
         else:
             self.click = False
+            self.color = (255, 0, 0)
 
     def move(self):
         mouse_x, mouse_y = pygame.mouse.get_pos()
