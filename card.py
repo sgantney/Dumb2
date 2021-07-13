@@ -1,7 +1,7 @@
 import pygame
 
 
-class Player:
+class Card:
     def __init__(self, x, y, width, height, color):
         self.x = x
         self.y = y
@@ -14,7 +14,7 @@ class Player:
         self.image = ""
 
     def draw(self, win):
-        pygame.draw.rect(win, self.color, self.rect)
+        win.blit(self.image, (self.x, self.y))
 
     def clicked(self, mouse_x, mouse_y, left):
         if left:
