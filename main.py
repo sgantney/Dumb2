@@ -1,5 +1,4 @@
-import pygame
-import sys, os
+import pygame, sys, os
 from card import Card
 
 width, height = 900, 500
@@ -11,19 +10,22 @@ def draw_window(screen, players):
     screen.fill((255, 255, 255))
     for player in reversed(players):
         player.draw(screen)
-        screen.blit(player.image, (player.x, player.y))
     pygame.display.update()
+
+
+def generate_cards():
+    cards = os.listdir("cards")
+    deck = [Card(50, 50, 100, 145) for i in range(54)]
+    for x in range(54):
+        deck[x].image = pygame.image.load(os.path.join("cards", cards[x]))
+        deck[x].image.convert()
+    return deck
 
 
 def main():
     run = True
     clock = pygame.time.Clock()
-
-    cards = os.listdir("cards")
-    deck = [Card(50, 50, 100, 145, (255, 0, 0)) for i in range(54)]
-    for x in range(54):
-        deck[x].image = pygame.image.load(os.path.join("cards", cards[x]))
-        deck[x].image.convert()
+    deck = generate_cards()
 
     while run:
         clock.tick(60)
@@ -31,7 +33,8 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-        for card in deck:
+
+        for card in deck:  # this is card moving logic
             if card.move():
                 deck.insert(0, deck.pop(deck.index(card)))
                 break

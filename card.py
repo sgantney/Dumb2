@@ -1,29 +1,33 @@
-import pygame
+import pygame, os
 
 
 class Card:
-    def __init__(self, x, y, width, height, color):
+    def __init__(self, x, y, width, height):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
-        self.color = color
+        self.flip = False
         self.rect = (x, y, width, height)
         self.vel = .1
         self.click = False
         self.image = ""
 
     def draw(self, win):
-        win.blit(self.image, (self.x, self.y))
+        if self.flip:
+            win.blit(self.image, (self.x, self.y))
+        else:
+            back = pygame.image.load(os.path.join("cards", "zback.png"))
+            back.convert()
+            win.blit(back, (self.x, self.y))
 
     def clicked(self, mouse_x, mouse_y, left):
         if left:
             if self.x + self.width > mouse_x > self.x and self.y + self.height > mouse_y > self.y:
                 self.click = True
-                self.color = (0, 255, 0)
+                self.flip = True
         else:
             self.click = False
-            self.color = (255, 0, 0)
 
     def move(self):
         mouse_x, mouse_y = pygame.mouse.get_pos()
