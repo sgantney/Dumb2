@@ -1,17 +1,20 @@
-import pygame, os
+import pygame
+import os
 
 
 class Card:
-    def __init__(self, x, y, width, height):
+    def __init__(self, x, y, width, height, flip, card_name):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
-        self.flip = False
+        self.flip = flip
         self.rect = (x, y, width, height)
         self.vel = .1
         self.click = False
-        self.image = ""
+        self.card_name = card_name
+        self.image = pygame.image.load(os.path.join("cards", self.card_name))
+        self.image.convert()
 
     def draw(self, win):
         if self.flip:

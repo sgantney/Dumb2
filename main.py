@@ -1,4 +1,7 @@
-import pygame, sys, os
+import os
+import pygame
+import sys
+
 from card import Card
 
 width, height = 900, 500
@@ -15,10 +18,7 @@ def draw_window(screen, players):
 
 def generate_cards():
     cards = os.listdir("cards")
-    deck = [Card(50, 50, 100, 145) for i in range(54)]
-    for x in range(54):
-        deck[x].image = pygame.image.load(os.path.join("cards", cards[x]))
-        deck[x].image.convert()
+    deck = [Card(50, 50, 100, 145, False, cards[i]) for i in range(54)]
     return deck
 
 
