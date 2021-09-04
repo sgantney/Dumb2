@@ -1,45 +1,27 @@
-import os
-import pygame
-import sys
-
+import os, pygame, sys
 from card import Card
 
+# General Setup
+pygame.init()
+clock = pygame.time.Clock()
+
+# Game Screen
 width, height = 900, 500
 pygame.display.set_caption("Dumb")
-win = pygame.display.set_mode((width, height))
+screen = pygame.display.set_mode((width, height))
 
+card = Card(200, 200, "cards", "red_joker.png", "zback.png", True)
+deck = pygame.sprite.Group()
+deck.add(card)
 
-def draw_window(screen, players):
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+    pygame.display.flip()
     screen.fill((255, 255, 255))
-    for player in reversed(players):
-        player.draw(screen)
-    pygame.display.update()
-
-
-def generate_cards():
-    cards = os.listdir("cards")
-    deck = [Card(50, 50, 100, 145, False, cards[i]) for i in range(54)]
-    return deck
-
-
-def main():
-    run = True
-    clock = pygame.time.Clock()
-    deck = generate_cards()
-
-    while run:
-        clock.tick(60)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
-        for card in deck:  # this is card moving logic
-            if card.move():
-                deck.insert(0, deck.pop(deck.index(card)))
-                break
-        draw_window(win, deck)
-
-
-if __name__ == "__main__":
-    main()
+    deck.draw(screen)
+    deck.update()
+    clock.tick(60)
