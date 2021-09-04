@@ -1,59 +1,33 @@
-import pygame
-import os
+import pygame, os
 
 
-class Card:
-    def __init__(self, x, y, width, height, flip, card_name):
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
+class Card(pygame.sprite.Sprite):
+    def __init__(self, pos_x, pos_y, image_folder, image_path, back_path, flip):
+        super().__init__()
+        self.pos_x = pos_x
+        self.pos_y = pos_y
+        self.front = pygame.image.load(os.path.join(image_folder, image_path))
+        self.back = pygame.image.load(os.path.join(image_folder, back_path))
+        self.image = self.front
+        self.rect = self.image.get_rect()
+        self.rect.center = (pos_x, pos_y)
         self.flip = flip
-        self.rect = (x, y, width, height)
-        self.vel = .1
-        self.click = False
-        self.card_name = card_name
-        self.image = pygame.image.load(os.path.join("cards", self.card_name))
-        self.image.convert()
-
-    def draw(self, win):
-        if self.flip:
-            win.blit(self.image, (self.x, self.y))
-        else:
-            back = pygame.image.load(os.path.join("cards", "zback.png"))
-            back.convert()
-            win.blit(back, (self.x, self.y))
-
-    def clicked(self, mouse_x, mouse_y, left):
-        if left:
-            if self.x + self.width > mouse_x > self.x and self.y + self.height > mouse_y > self.y:
-                self.click = True
-                self.flip = True
-        else:
-            self.click = False
-
-    def move(self):
-        mouse_x, mouse_y = pygame.mouse.get_pos()
-        center_x = mouse_x - self.width/2
-        center_y = mouse_y - self.height/2
-        left, middle, right = pygame.mouse.get_pressed(num_buttons=3)
-        self.clicked(mouse_x, mouse_y, left)
-        if left and self.click:
-            x_dist = abs(center_x - self.x)
-            y_dist = abs(center_y - self.y)
-            if center_x < self.x:
-                self.x -= self.vel * x_dist
-            if center_x > self.x:
-                self.x += self.vel * x_dist
-            if center_y < self.y:
-                self.y -= self.vel * y_dist
-            if center_y > self.y:
-                self.y += self.vel * y_dist
-        self.update()
-        if self.click:
-            return True
-        else:
-            return False
+        self.held = False
 
     def update(self):
-        self.rect = (self.x, self.y, self.width, self.height)
+        self.move()
+        self.rect.move(self.pos_x, self.pos_y)
+
+    def clicked(self):
+        return pygame.mouse.get_pressed(3)[0] and self.rect.collidepoint(pygame.mouse.get_pos())
+
+    def move(self):
+        speed = .1
+        if self.clicked() or self.held:
+            (x, y) = pygame.mouse.get_pos()
+            self.pos_x -= speed * (self.pos_x - x)
+            self.pos_y -= speed * (self.pos_y - y)
+            self.rect.center = (self.pos_x, self.pos_y)
+            self.held = True
+        if not pygame.mouse.get_pressed(3)[0]:
+            self.held = False
